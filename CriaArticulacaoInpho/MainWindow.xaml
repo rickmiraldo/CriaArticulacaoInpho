@@ -1,12 +1,136 @@
-﻿<Window x:Class="CriaArticulacaoInpho.MainWindow"
+<Window x:Name="wiMain" x:Class="CriaArticulacaoInpho.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CriaArticulacaoInpho"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Criador de Articulação para Inpho" Height="700" Width="1100" Closing="wiMain_Closing">
     <Grid>
-        
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="Arquivo">
+                    <MenuItem Header="Carregar arquivo CSV..." Name="miCarregarCSV" Click="miCarregarCSV_Click"></MenuItem>
+                    <!--<Separator></Separator>
+                    <MenuItem Header="Gerar articulação para Inpho..." IsEnabled="False" Name="miGerarInpho"></MenuItem>
+                    <MenuItem Header="Gerar script para AutoCAD..." IsEnabled="False" Name="miGerarScript"></MenuItem>-->
+                    <Separator></Separator>
+                    <MenuItem Header="Sair" Name="miSair" Click="miSair_Click"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Ajuda">
+                    <MenuItem Header="Ver log" Name="miVerLog" Click="miVerLog_Click"></MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Header="Sobre" Name="miSobre" Click="miSobre_Click"></MenuItem>
+                </MenuItem>
+            </Menu>
+
+            <StatusBar DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+                <StatusBarItem>
+                    <TextBlock Name="tbStatusText" Text="Pronto"></TextBlock>
+                </StatusBarItem>
+            </StatusBar>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="55*"></ColumnDefinition> <!-- Coluna 1 -->
+                    <ColumnDefinition Width="45*"></ColumnDefinition> <!-- Coluna 2 -->
+                </Grid.ColumnDefinitions>
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition> <!-- Título -->
+                    <RowDefinition Height="*"></RowDefinition> <!-- Data Grids -->
+                    <RowDefinition Height="auto"></RowDefinition> <!-- Variáveis -->
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="Arquivo CSV - Pontos do GlobalMapper" HorizontalAlignment="Center" FontSize="18" FontWeight="Bold"></Label>
+                <Label Grid.Row="0" Grid.Column="1" Content="Articulação Inpho" HorizontalAlignment="Center" FontSize="18" FontWeight="Bold"></Label>
+
+                <DataGrid Name="dgCSV" Grid.Row="1" Grid.Column="0" Margin="10" IsReadOnly="True" CanUserSortColumns="False"></DataGrid>
+                <DataGrid Name="dgInpho" Grid.Row="1" Grid.Column="1" Margin="10" IsReadOnly="True" CanUserAddRows="False"></DataGrid>
+
+                <Grid Grid.Row="2" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition> <!-- Filler -->
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition> <!-- Filler -->
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition> <!-- Filler -->
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition> <!-- Filler -->
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Grid.Row="1" Grid.Column="1" Header="Variáveis" Padding="10" Margin="10">
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Tamanho do pixel (m):" TextAlignment="Right" VerticalAlignment="Center"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Dimensão X da folha:" TextAlignment="Right" VerticalAlignment="Center"></TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Dimensão Y da folha:" TextAlignment="Right" VerticalAlignment="Center"></TextBlock>
+
+                            <TextBox Grid.Row="0" Grid.Column="1" Name="tbTamanhoPixel" Width="60" HorizontalAlignment="Right" IsEnabled="False"></TextBox>
+                            <TextBox Grid.Row="1" Grid.Column="1" Name="tbDimensaoX" Width="60" HorizontalAlignment="Right" Margin="10 5 0 5" IsEnabled="False"></TextBox>
+                            <TextBox Grid.Row="2" Grid.Column="1" Name="tbDimensaoY" Width="60" HorizontalAlignment="Right" IsEnabled="False"></TextBox>
+
+                            <Button Grid.Row="1" Grid.Column="2" Content="Calcular" Name="btCalcular" Padding="10 5 10 5" Margin="10 0 0 0" IsEnabled="False" Click="btCalcular_Click"></Button>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition> <!-- Filler -->
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition> <!-- Filler -->
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition> <!-- Filler -->
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition> <!-- Filler -->
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Grid.Row="1" Grid.Column="1" Header="Gerar arquivos" Padding="10" Margin="10">
+                        <StackPanel Orientation="Vertical">
+                            <Button Name="btGerarInpho" Content="Gerar articulação para Inpho" Padding="7 3 7 3" Margin="0 0 0 10" IsEnabled="False" Click="btGerarInpho_Click"></Button>
+                            <Button Name="btGerarScript" Content="Gerar script para AutoCAD" Padding="3" IsEnabled="False" Click="btGerarScript_Click"></Button>
+                        </StackPanel>
+
+                    </GroupBox>
+
+                    <!--<GroupBox Grid.Column="1" Header="Selecionar colunas" Padding="10" Margin="10">
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Nome da folha:" TextAlignment="Right" VerticalAlignment="Center"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="X do centro:" TextAlignment="Right" VerticalAlignment="Center"></TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Y do centro:" TextAlignment="Right" VerticalAlignment="Center"></TextBlock>
+
+                            <ComboBox Grid.Row="0" Grid.Column="1" Name="cbNomeFolha" Width="100" HorizontalAlignment="Right" IsEnabled="False"></ComboBox>
+                            <ComboBox Grid.Row="1" Grid.Column="1" Name="cbXCentro" Width="100" HorizontalAlignment="Right" Margin="10 5 0 5" IsEnabled="False"></ComboBox>
+                            <ComboBox Grid.Row="2" Grid.Column="1" Name="cbYCentro" Width="100" HorizontalAlignment="Right" IsEnabled="False"></ComboBox>
+                        </Grid>
+                        
+                    </GroupBox>-->
+                    
+                </Grid>
+            </Grid>
+        </DockPanel>
     </Grid>
 </Window>
