@@ -251,7 +251,7 @@ namespace CriaArticulacaoInpho
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Erro ao tentar salvar o arquivo Inpho:\n\n", "Erro");
+                System.Windows.MessageBox.Show("Erro ao tentar salvar o arquivo Inpho:\n\n" + ex, "Erro");
                 gravaLog("Erro ao tentar salvar o arquivo Inpho: " + ex);
                 tbStatusText.Text = "Erro ao salvar o arquivo Inpho! Consulte o log para informações.";
             }
@@ -287,7 +287,7 @@ namespace CriaArticulacaoInpho
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Erro ao tentar salvar o arquivo script:\n\n", "Erro");
+                System.Windows.MessageBox.Show("Erro ao tentar salvar o arquivo script:\n\n" + ex, "Erro");
                 gravaLog("Erro ao tentar salvar o arquivo script: " + ex);
                 tbStatusText.Text = "Erro ao salvar o arquivo script! Consulte o log para informações.";
             }
